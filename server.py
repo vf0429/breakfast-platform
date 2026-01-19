@@ -73,7 +73,10 @@ if __name__ == '__main__':
     print("📍 Open http://localhost:{} in your browser".format(port))
     
     # Run with gunicorn in production, flask in development
-    if os.getenv('PRODUCTION'):
+    # Auto-detect production environments (Railway, Render, etc.)
+    is_production = os.getenv('PRODUCTION') or os.getenv('RAILWAY_ENVIRONMENT') or os.getenv('RENDER')
+    
+    if is_production:
         # Production mode - use gunicorn
         import gunicorn.app.base
         
