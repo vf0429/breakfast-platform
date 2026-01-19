@@ -1107,6 +1107,17 @@
             addAiMessage('user', question);
             input.value = '';
             
+            // Check if user wants to generate a recipe
+            const generateKeywords = ['生成', '添加', '创建', '新增', '帮我做', '怎么做'];
+            const isGenerateRequest = generateKeywords.some(kw => question.includes(kw)) && 
+                                      (question.includes('食谱') || question.includes('菜'));
+            
+            if (isGenerateRequest) {
+                // Extract dish name and generate recipe
+                await generateRecipeFromText(question);
+                return;
+            }
+            
             // Show typing indicator
             addAiMessage('assistant', '正在思考...');
             
@@ -1133,6 +1144,65 @@
                 const messages = document.getElementById('ai-messages');
                 messages.removeChild(messages.lastChild);
                 addAiMessage('assistant', '抱歉，出现了一些问题。请稍后再试。');
+            }
+        }
+        
+        async function generateRecipeFromText(text) {
+            addAiMessage('assistant', '🍳 正在为您生成食谱...');
+            
+            try {
+                const response = await fetch('/api/ai/generate-recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dish_name: text })
+                });
+                
+                const data = await response.json();
+                
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                
+                if (data.success) {
+                    const recipe = data.recipe;
+                    const ingredientsList = recipe.ingredients.map(i => `• ${i.ingredient_name}`).join('\n');
+                    
+                    addAiMessage('assistant', `✅ ${data.message}\n\n📋 **${recipe.recipe_name}**\n${recipe.recipe_name_en || ''}\n\n⏱️ ${recipe.cooking_time}分钟 | 难度 ${'⭐'.repeat(recipe.difficulty)}\n\n🛒 食材:\n${ingredientsList}`);
+                    
+                    const cardHtml = `
+                        <div class="recipe-card">
+                            <h4>🎉 新添加: ${recipe.recipe_name}</h4>
+                            <div class="recipe-card-meta">
+                                ${recipe.category} · ${recipe.cooking_time}分钟 · ${recipe.calories || '?'} kcal
+                            </div>
+                            <div class="recipe-card-actions">
+                                <button class="btn-view" onclick="showRecipeDetail(${recipe.id}); closeAiChat();">查看详情</button>
+                                <button class="btn-confirm-card" onclick="confirmDish(${recipe.id}); closeAiChat();">设为明日早餐</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'ai-message assistant';
+                    cardDiv.innerHTML = cardHtml;
+                    messages.appendChild(cardDiv);
+                    messages.scrollTop = messages.scrollHeight;
+                    
+                    loadAllRecipes();
+                } else {
+                    addAiMessage('assistant', `❌ ${data.error || '生成失败，请重试'}`);
+                }
+            } catch (error) {
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                addAiMessage('assistant', '❌ 生成失败，请检查网络连接后重试');
+            }
+        }
+        
+        function promptRecipeGeneration() {
+            const dishName = prompt('请输入想要生成的菜品名称：\n\n例如：日式厚蛋烧、法式吐司、牛油果鸡蛋沙拉');
+            if (dishName && dishName.trim()) {
+                addAiMessage('user', `请帮我生成 "${dishName}" 的食谱`);
+                generateRecipeFromText(dishName.trim());
             }
         }
         
@@ -1313,6 +1383,7 @@
             <button class="quick-q" onclick="askQuickQuestion('火候怎么掌握？')">火候</button>
             <button class="quick-q" onclick="askQuickQuestion('有什么替代食材？')">替代</button>
             <button class="quick-q" onclick="askQuickQuestion('做失败了怎么补救？')">补救</button>
+            <button class="quick-q" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);" onclick="promptRecipeGeneration()">➕ 生成新食谱</button>
         </div>
         <div class="ai-input-area">
             <input type="text" class="ai-input" id="ai-input" placeholder="问我任何烹饪问题...">

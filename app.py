@@ -507,6 +507,70 @@ def upload_recipe_image():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 
+@app.route('/api/ai/generate-recipe', methods=['POST'])
+def generate_recipe():
+    """Generate a recipe from dish name using AI."""
+    try:
+        from ai_assistant import generate_recipe_from_name, insert_recipe_to_db
+        
+        data = request.get_json()
+        dish_name = data.get('dish_name', '').strip()
+        
+        if not dish_name:
+            return jsonify({'success': False, 'error': '请提供菜品名称'}), 400
+        
+        # Generate recipe
+        recipe_data = generate_recipe_from_name(dish_name)
+        
+        if not recipe_data.get('success', False):
+            return jsonify(recipe_data), 400
+        
+        # Insert into database
+        insert_result = insert_recipe_to_db(recipe_data)
+        
+        if not insert_result.get('success', False):
+            return jsonify(insert_result), 500
+        
+        # Get the full recipe data to return
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        recipe_id = insert_result['recipe_id']
+        
+        cursor.execute('''
+            SELECT r.*, n.calories, n.protein, n.carbohydrate, n.fat, n.fiber
+            FROM recipes r
+            LEFT JOIN nutrition n ON r.id = n.recipe_id
+            WHERE r.id = ?
+        ''', (recipe_id,))
+        
+        recipe = dict(cursor.fetchone())
+        
+        cursor.execute('''
+            SELECT ingredient_name, quantity, unit, notes
+            FROM ingredients WHERE recipe_id = ?
+        ''', (recipe_id,))
+        recipe['ingredients'] = [dict(row) for row in cursor.fetchall()]
+        
+        cursor.execute('''
+            SELECT step_number, instruction
+            FROM instructions WHERE recipe_id = ?
+            ORDER BY step_number
+        ''', (recipe_id,))
+        recipe['instructions'] = [dict(row) for row in cursor.fetchall()]
+        
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'message': insert_result['message'],
+            'recipe': recipe
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     # Check if database exists
     if not os.path.exists(DB_PATH):

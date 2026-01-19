@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-AI Cooking Assistant using OpenAI API.
+AI Cooking Assistant using Perplexity API (with OpenAI fallback).
 Provides help with cooking steps, ingredient substitutions, and tips.
 """
 
@@ -10,8 +10,29 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def get_perplexity_client():
+    """
+    Get Perplexity client.
+    Note: Perplexity API is compatible with OpenAI SDK, so we use the 'openai' library.
+    This does NOT require an OpenAI account, just the library.
+    """
+    api_key = os.getenv('PERPLEXITY_API_KEY')
+    if not api_key or api_key.startswith('pplx-your'):
+        return None
+    
+    try:
+        from openai import OpenAI
+        return OpenAI(
+            api_key=api_key,
+            base_url="https://api.perplexity.ai"
+        )
+    except ImportError:
+        print("❌ 错误: 未安装 'openai' 库。请运行: pip install openai")
+        return None
+
+
 def get_openai_client():
-    """Get OpenAI client."""
+    """Get OpenAI client (for vision tasks)."""
     api_key = os.getenv('OPENAI_API_KEY')
     if not api_key or api_key.startswith('sk-your'):
         return None
@@ -21,6 +42,19 @@ def get_openai_client():
         return OpenAI(api_key=api_key)
     except ImportError:
         return None
+
+
+def get_ai_client():
+    """Get the best available AI client (Perplexity first, then OpenAI)."""
+    client = get_perplexity_client()
+    if client:
+        return client, "perplexity"
+    
+    client = get_openai_client()
+    if client:
+        return client, "openai"
+    
+    return None, None
 
 
 def get_cooking_help(recipe_name, recipe_steps, user_question, ingredients=None):
@@ -36,7 +70,7 @@ def get_cooking_help(recipe_name, recipe_steps, user_question, ingredients=None)
     Returns:
         AI response string
     """
-    client = get_openai_client()
+    client, provider = get_ai_client()
     
     if not client:
         return get_fallback_response(user_question)
@@ -67,8 +101,14 @@ def get_cooking_help(recipe_name, recipe_steps, user_question, ingredients=None)
 请针对用户的问题提供帮助。"""
 
     try:
+        # Choose model based on provider
+        if provider == "perplexity":
+            model = "sonar-pro"
+        else:
+            model = "gpt-4o-mini"
+        
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=model,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
@@ -80,7 +120,7 @@ def get_cooking_help(recipe_name, recipe_steps, user_question, ingredients=None)
         return response.choices[0].message.content
         
     except Exception as e:
-        print(f"OpenAI API error: {e}")
+        print(f"AI API error ({provider}): {e}")
         return get_fallback_response(user_question)
 
 
@@ -114,19 +154,25 @@ def get_fallback_response(question):
 
 如果有具体问题，欢迎继续问我！😊
 
-提示: 配置 OpenAI API key 可以获得更智能的回答哦！"""
+提示: 配置 Perplexity 或 OpenAI API key 可以获得更智能的回答哦！"""
 
 
 def get_step_explanation(recipe_name, step_number, step_text):
     """Get detailed explanation for a specific cooking step."""
-    client = get_openai_client()
+    client, provider = get_ai_client()
     
     if not client:
-        return f"📝 步骤 {step_number}: {step_text}\n\n💡 提示: 按照步骤操作，注意火候和时间。如需更详细帮助，请配置 OpenAI API。"
+        return f"📝 步骤 {step_number}: {step_text}\n\n💡 提示: 按照步骤操作，注意火候和时间。如需更详细帮助，请配置 API。"
     
     try:
+        # Choose model based on provider
+        if provider == "perplexity":
+            model = "sonar-pro"
+        else:
+            model = "gpt-4o-mini"
+        
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=model,
             messages=[
                 {
                     "role": "system", 
@@ -149,7 +195,7 @@ def get_step_explanation(recipe_name, step_number, step_text):
 
 def get_ingredient_tips(ingredient_name):
     """Get tips for selecting and preparing an ingredient."""
-    client = get_openai_client()
+    client, provider = get_ai_client()
     
     tips = {
         "鸡蛋": "🥚 鸡蛋选购技巧:\n• 新鲜鸡蛋放水中会沉底\n• 壳面粗糙的更新鲜\n• 冷藏保存，大头朝上",
@@ -164,8 +210,14 @@ def get_ingredient_tips(ingredient_name):
         return f"💡 {ingredient_name}: 选择新鲜的，储存在适当条件下。"
     
     try:
+        # Choose model based on provider
+        if provider == "perplexity":
+            model = "sonar-pro"
+        else:
+            model = "gpt-4o-mini"
+        
         response = client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=model,
             messages=[
                 {
                     "role": "system", 
@@ -196,12 +248,20 @@ def extract_recipe_from_image(image_base64):
     Returns:
         Dictionary with recipe data or error message
     """
+    # Vision requires OpenAI - Perplexity doesn't support image analysis
     client = get_openai_client()
     
     if not client:
+        # Perplexity does not support vision/image analysis
+        perplexity_client = get_perplexity_client()
+        if perplexity_client:
+            return {
+                "success": False,
+                "error": "图片识别需要 OpenAI API。\n\n💡 但您可以描述菜品名称，我会帮您生成食谱！\n\n请在对话框中输入菜品名称，例如：'帮我生成番茄炒蛋的食谱'"
+            }
         return {
             "success": False,
-            "error": "OpenAI API 未配置。请在 .env 文件中设置 OPENAI_API_KEY。"
+            "error": "图片识别需要 OpenAI API。请在 .env 文件中设置 OPENAI_API_KEY。"
         }
     
     try:
@@ -368,4 +428,94 @@ def insert_recipe_to_db(recipe_data):
         return {
             "success": False,
             "error": f"数据库插入失败: {str(e)}"
+        }
+
+
+def generate_recipe_from_name(dish_name):
+    """
+    Generate a complete recipe from just a dish name using AI.
+    Works with both Perplexity and OpenAI.
+    
+    Args:
+        dish_name: Name of the dish to generate recipe for
+    
+    Returns:
+        Dictionary with recipe data or error message
+    """
+    client, provider = get_ai_client()
+    
+    if not client:
+        return {
+            "success": False,
+            "error": "AI API 未配置。请在 .env 文件中设置 PERPLEXITY_API_KEY 或 OPENAI_API_KEY。"
+        }
+    
+    system_prompt = """你是一个专业的食谱生成助手。根据用户提供的菜品名称，生成完整的食谱信息，以JSON格式返回：
+
+{
+    "recipe_name": "菜品中文名",
+    "recipe_name_en": "English Name",
+    "category": "分类（蛋白质/粗粮谷物/蔬菜/饮品）",
+    "difficulty": 1-3的数字（1简单，2中等，3复杂）,
+    "cooking_time": 烹饪时间（分钟，数字）,
+    "ingredients": [
+        {"name": "食材名", "quantity": 数量, "unit": "单位", "notes": "备注"}
+    ],
+    "instructions": [
+        {"step": 1, "description": "步骤描述"}
+    ],
+    "nutrition": {
+        "calories": 热量数字,
+        "protein": 蛋白质克数,
+        "carbohydrate": 碳水克数,
+        "fat": 脂肪克数,
+        "fiber": 纤维克数
+    }
+}
+
+请生成适合早餐的健康食谱。只返回JSON，不要其他文字。"""
+
+    try:
+        # Choose model based on provider
+        if provider == "perplexity":
+            model = "sonar-pro"
+        else:
+            model = "gpt-4o-mini"
+        
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f'请为"{dish_name}"生成完整的早餐食谱，包括食材、步骤和营养信息。'}
+            ],
+            max_tokens=1500,
+            temperature=0.7
+        )
+        
+        result_text = response.choices[0].message.content
+        
+        # Clean up the response - remove markdown code blocks if present
+        if "```" in result_text:
+            import re
+            json_match = re.search(r'```(?:json)?\s*([\s\S]*?)```', result_text)
+            if json_match:
+                result_text = json_match.group(1)
+        
+        try:
+            import json
+            recipe_data = json.loads(result_text.strip())
+            recipe_data["success"] = True
+            return recipe_data
+        except json.JSONDecodeError as je:
+            print(f"JSON Parse Error: {je}")
+            print(f"Raw Text: {result_text}")
+            return {
+                "success": False,
+                "error": f"生成食谱失败(JSON解析错误). 请重试。"
+            }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"生成食谱失败: {str(e)}"
         }
