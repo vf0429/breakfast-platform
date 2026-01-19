@@ -395,6 +395,35 @@ def insert_recipes(conn):
                 {"step": 4, "description": "加入红枣枸杞焖5分钟"}
             ],
             "nutrition": {"calories": 150, "protein": 4, "carbohydrate": 32, "fat": 1, "fiber": 2}
+        },
+        {
+            "recipe_name": "煎蛋火腿豆腐米粉",
+            "recipe_name_en": "Rice Noodles with Egg, Ham & Tofu",
+            "category": "综合早餐",
+            "difficulty": 2,
+            "cooking_time": 20,
+            "source_article": "用户自定义",
+            "source_author": "User",
+            "source_link": "",
+            "publish_date": "2024-01-20",
+            "likes_count": 0,
+            "ingredients": [
+                {"name": "米粉", "quantity": 1, "unit": "份", "notes": "干米粉需提前泡发"},
+                {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": ""},
+                {"name": "火腿肠", "quantity": 1, "unit": "根", "notes": ""},
+                {"name": "老豆腐", "quantity": 100, "unit": "g", "notes": "切小方块"},
+                {"name": "白菜", "quantity": 50, "unit": "g", "notes": "或娃娃菜"},
+                {"name": "黑芝麻", "quantity": 1, "unit": "g", "notes": "点缀用"}
+            ],
+            "instructions": [
+                {"step": 1, "description": "【准备】米粉泡软，白菜切段，豆腐切块，香肠改刀"},
+                {"step": 2, "description": "【煮粉】水开下米粉，中火煮3-5分钟至软熟，捞出装盘"},
+                {"step": 3, "description": "【焯菜】用煮粉水焯熟白菜，沥干摆盘"},
+                {"step": 4, "description": "【煎豆腐】平底锅煎豆腐至四面金黄，撒盐调味"},
+                {"step": 5, "description": "【煎肉蛋】煎香肠至微焦；煎荷包蛋至喜欢的熟度"},
+                {"step": 6, "description": "【装盘】组合所有食材，撒黑芝麻，可淋少许生抽"}
+            ],
+            "nutrition": {"calories": 550, "protein": 25, "carbohydrate": 65, "fat": 22, "fiber": 6}
         }
     ]
     
