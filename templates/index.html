@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍳 早餐决策系统 | Breakfast Decision</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(56, 239, 125, 0.4);
+        }
+
+        .dish-display {
+            display: none;
+        }
+
+        .dish-display.active {
+            display: block;
+        }
+
+        .dish-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .dish-name {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .dish-name-en {
+            font-size: 1.2em;
+            color: #888;
+            margin-bottom: 15px;
+        }
+
+        .dish-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: #f8f9fa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .meta-item span {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .ingredients-section, .instructions-section {
+            margin-top: 25px;
+        }
+
+        .ingredients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .ingredient-item {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 12px 16px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ingredient-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .ingredient-amount {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .instructions-list {
+            list-style: none;
+        }
+
+        .instruction-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .instruction-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .rating-section {
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px dashed #eee;
+        }
+
+        .rating-title {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .stars {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .star {
+            font-size: 2.5em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #ddd;
+        }
+
+        .star:hover, .star.active {
+            color: #ffc107;
+            transform: scale(1.2);
+        }
+
+        .current-rating {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #888;
+        }
+
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .nutrition-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .nutrition-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nutrition-label {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .tomorrow-banner {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .tomorrow-date {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .tomorrow-title {
+            font-size: 1.8em;
+            margin: 10px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .all-recipes {
+            margin-top: 20px;
+        }
+
+        .recipe-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .recipe-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .recipe-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .recipe-info h4 {
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .recipe-info span {
+            font-size: 0.85em;
+            color: #888;
+        }
+
+        .recipe-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #ffc107;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+
+        .empty-state .emoji {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .nutrition-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .dish-name {
+                font-size: 1.5em;
+            }
+            
+            .ingredients-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f0f0f0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .confirmed-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* AI Assistant Styles */
+        .ai-assistant {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .ai-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            color: white;
+            font-size: 1.8em;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(17, 153, 142, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .ai-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        .ai-chat {
+            display: none;
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            max-height: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .ai-chat.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ai-header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+        }
+
+        .ai-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        .ai-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            max-height: 350px;
+        }
+
+        .ai-message {
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .ai-message.user {
+            text-align: right;
+        }
+
+        .ai-message .bubble {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 85%;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .ai-message.user .bubble {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .ai-message.assistant .bubble {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .ai-input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            font-size: 0.95em;
+            outline: none;
+        }
+
+        .ai-input:focus {
+            border-color: #11998e;
+        }
+
+        .ai-send {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            border: none;
+            color: white;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .quick-questions {
+            padding: 10px 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .quick-q {
+            padding: 6px 12px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-q:hover {
+            background: #e0e0e0;
+        }
+
+        .step-help-btn {
+            background: none;
+            border: none;
+            color: #11998e;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .step-help-btn:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .ai-chat {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍳 早餐决策系统</h1>
+            <p>让每天的早餐都充满惊喜 | Make every breakfast a surprise</p>
+        </header>
+
+        <div class="card">
+            <div class="tabs">
+                <div class="tab active" data-tab="tomorrow">📅 明日早餐</div>
+                <div class="tab" data-tab="draw">🎲 随机抽取</div>
+                <div class="tab" data-tab="all">📋 全部食谱</div>
+            </div>
+
+            <!-- Tomorrow's Meal Tab -->
+            <div class="tab-content active" id="tomorrow-tab">
+                <div id="tomorrow-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>正在加载明日早餐...</p>
+                </div>
+                
+                <div id="tomorrow-empty" class="empty-state" style="display: none;">
+                    <div class="emoji">🎰</div>
+                    <h3>还没有选好明天的早餐</h3>
+                    <p>点击下方按钮为明天抽取一道美味早餐吧！</p>
+                    <br>
+                    <button class="btn btn-primary" onclick="drawForTomorrow()">🎲 为明天抽取早餐</button>
+                </div>
+
+                <div id="tomorrow-dish" class="dish-display">
+                    <div class="tomorrow-banner">
+                        <div class="tomorrow-date" id="tomorrow-date"></div>
+                        <div class="tomorrow-title">明日早餐已安排 ✨</div>
+                    </div>
+                    <div id="tomorrow-content"></div>
+                </div>
+            </div>
+
+            <!-- Random Draw Tab -->
+            <div class="tab-content" id="draw-tab">
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="drawDish()">🎲 随机抽取</button>
+                    <button class="btn btn-secondary" onclick="drawForTomorrow()">📅 抽取明日早餐</button>
+                </div>
+                
+                <div id="draw-result" class="dish-display"></div>
+                
+                <div id="draw-empty" class="empty-state">
+                    <div class="emoji">🎲</div>
+                    <h3>点击上方按钮抽取早餐</h3>
+                    <p>评分越高的菜品越容易被抽中哦！</p>
+                </div>
+            </div>
+
+            <!-- All Recipes Tab -->
+            <div class="tab-content" id="all-tab">
+                <div class="section-title">📋 全部食谱</div>
+                <div id="all-recipes-loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>正在加载食谱...</p>
+                </div>
+                <div id="all-recipes-list" class="recipe-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+                
+                if (tab.dataset.tab === 'all') {
+                    loadAllRecipes();
+                }
+            });
+        });
+
+        // Format date for display
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            return date.toLocaleDateString('zh-CN', options);
+        }
+
+        // Get tomorrow's date
+        function getTomorrowDate() {
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            return tomorrow.toISOString().split('T')[0];
+        }
+
+        // Render dish details
+        function renderDish(dish, containerId, showConfirmBtn = false, showRedrawBtn = false) {
+            const container = document.getElementById(containerId);
+            
+            let ingredientsHtml = dish.ingredients.map(ing => `
+                <div class="ingredient-item">
+                    <span class="ingredient-name">${ing.ingredient_name}</span>
+                    <span class="ingredient-amount">${ing.quantity || ''} ${ing.unit || ''}</span>
+                </div>
+            `).join('');
+
+            let instructionsHtml = dish.instructions.map(inst => `
+                <li class="instruction-item">
+                    <div class="step-number">${inst.step_number}</div>
+                    <div class="step-text">${inst.instruction}</div>
+                    <button class="step-help-btn" onclick="getStepHelp(${dish.id}, ${inst.step_number}, '${inst.instruction.replace(/'/g, "\\'")}')">❓ 帮助</button>
+                </li>
+            `).join('');
+
+            // Store current recipe for AI assistant
+            currentRecipe = dish;
+
+            let buttonsHtml = '';
+            if (showConfirmBtn && !dish.already_confirmed) {
+                buttonsHtml = `
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-success" onclick="confirmDish(${dish.id})">✅ 确认这道菜</button>
+                        <button class="btn btn-secondary" onclick="drawForTomorrow()">🔄 换一个</button>
+                    </div>
+                `;
+            } else if (dish.already_confirmed || dish.confirmed) {
+                buttonsHtml = `
+                    <div style="text-align: center;">
+                        <span class="confirmed-badge">✅ 已确认</span>
+                    </div>
+                `;
+            }
+            
+            if (showRedrawBtn) {
+                buttonsHtml = `
+                    <div class="btn-group" style="margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="drawDish()">🎲 再抽一次</button>
+                        <button class="btn btn-success" onclick="confirmDish(${dish.id})">📅 设为明日早餐</button>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = `
+                <div class="dish-header">
+                    <div class="dish-name">${dish.recipe_name}</div>
+                    <div class="dish-name-en">${dish.recipe_name_en || ''}</div>
+                    <div class="dish-meta">
+                        <div class="meta-item">⏱️ <span>${dish.cooking_time}</span> 分钟</div>
+                        <div class="meta-item">📊 难度 <span>${'⭐'.repeat(dish.difficulty)}</span></div>
+                        <div class="meta-item">📁 <span>${dish.category}</span></div>
+                    </div>
+                </div>
+
+                <div class="nutrition-grid">
+                    <div class="nutrition-item">
+                        <div class="nutrition-value">${dish.calories || '-'}</div>
+                        <div class="nutrition-label">热量 kcal</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-value">${dish.protein || '-'}</div>
+                        <div class="nutrition-label">蛋白质 g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-value">${dish.carbohydrate || '-'}</div>
+                        <div class="nutrition-label">碳水 g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-value">${dish.fat || '-'}</div>
+                        <div class="nutrition-label">脂肪 g</div>
+                    </div>
+                    <div class="nutrition-item">
+                        <div class="nutrition-value">${dish.fiber || '-'}</div>
+                        <div class="nutrition-label">纤维 g</div>
+                    </div>
+                </div>
+
+                <div class="ingredients-section">
+                    <div class="section-title">🛒 所需食材</div>
+                    <div class="ingredients-grid">${ingredientsHtml}</div>
+                </div>
+
+                <div class="instructions-section">
+                    <div class="section-title">👨‍🍳 烹饪步骤</div>
+                    <ul class="instructions-list">${instructionsHtml}</ul>
+                </div>
+
+                ${buttonsHtml}
+
+                <div class="rating-section">
+                    <div class="rating-title">这道菜怎么样？给个评价吧！</div>
+                    <div class="stars" data-recipe-id="${dish.id}">
+                        ${[1,2,3,4,5].map(i => `
+                            <span class="star ${i <= Math.round(dish.user_rating) ? 'active' : ''}" 
+                                  data-rating="${i}" 
+                                  onclick="rateDish(${dish.id}, ${i})">★</span>
+                        `).join('')}
+                    </div>
+                    <div class="current-rating">当前评分: ${(dish.user_rating || 3).toFixed(1)} / 5.0</div>
+                </div>
+            `;
+            
+            container.classList.add('active');
+        }
+
+        // Load tomorrow's meal
+        async function loadTomorrow() {
+            document.getElementById('tomorrow-loading').style.display = 'block';
+            document.getElementById('tomorrow-empty').style.display = 'none';
+            document.getElementById('tomorrow-dish').classList.remove('active');
+            
+            try {
+                const response = await fetch('/api/tomorrow');
+                const data = await response.json();
+                
+                document.getElementById('tomorrow-loading').style.display = 'none';
+                
+                if (data.confirmed) {
+                    document.getElementById('tomorrow-date').textContent = formatDate(getTomorrowDate());
+                    renderDish(data, 'tomorrow-content', false, false);
+                    document.getElementById('tomorrow-dish').classList.add('active');
+                } else {
+                    document.getElementById('tomorrow-empty').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('tomorrow-loading').style.display = 'none';
+                document.getElementById('tomorrow-empty').style.display = 'block';
+            }
+        }
+
+        // Draw for tomorrow
+        async function drawForTomorrow() {
+            document.getElementById('tomorrow-loading').style.display = 'block';
+            document.getElementById('tomorrow-empty').style.display = 'none';
+            document.getElementById('tomorrow-dish').classList.remove('active');
+            
+            try {
+                const response = await fetch('/api/draw/tomorrow');
+                const dish = await response.json();
+                
+                document.getElementById('tomorrow-loading').style.display = 'none';
+                document.getElementById('tomorrow-date').textContent = formatDate(getTomorrowDate());
+                renderDish(dish, 'tomorrow-content', true, false);
+                document.getElementById('tomorrow-dish').classList.add('active');
+                
+                // Switch to tomorrow tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelector('[data-tab="tomorrow"]').classList.add('active');
+                document.getElementById('tomorrow-tab').classList.add('active');
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('tomorrow-loading').style.display = 'none';
+                alert('抽取失败，请重试');
+            }
+        }
+
+        // Confirm dish for tomorrow
+        async function confirmDish(recipeId) {
+            try {
+                const response = await fetch(`/api/confirm/${recipeId}`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    loadTomorrow();
+                    alert('✅ 明日早餐已确认！');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('确认失败，请重试');
+            }
+        }
+
+        // Random draw
+        async function drawDish() {
+            document.getElementById('draw-empty').style.display = 'none';
+            document.getElementById('draw-result').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>正在为您抽取...</p>
+                </div>
+            `;
+            document.getElementById('draw-result').classList.add('active');
+            
+            try {
+                const response = await fetch('/api/draw');
+                const dish = await response.json();
+                
+                renderDish(dish, 'draw-result', false, true);
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('draw-result').innerHTML = `
+                    <div class="empty-state">
+                        <div class="emoji">😅</div>
+                        <p>抽取失败，请重试</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Rate dish
+        async function rateDish(recipeId, rating) {
+            try {
+                const response = await fetch(`/api/rate/${recipeId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ rating })
+                });
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Update stars display
+                    const starsContainer = document.querySelector(`.stars[data-recipe-id="${recipeId}"]`);
+                    if (starsContainer) {
+                        starsContainer.querySelectorAll('.star').forEach((star, index) => {
+                            star.classList.toggle('active', index < rating);
+                        });
+                        starsContainer.nextElementSibling.textContent = `当前评分: ${result.new_rating.toFixed(1)} / 5.0`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Load all recipes
+        async function loadAllRecipes() {
+            const loading = document.getElementById('all-recipes-loading');
+            const list = document.getElementById('all-recipes-list');
+            
+            loading.style.display = 'block';
+            list.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/recipes');
+                const recipes = await response.json();
+                
+                loading.style.display = 'none';
+                
+                list.innerHTML = recipes.map(recipe => `
+                    <div class="recipe-item" onclick="showRecipeDetail(${recipe.id})">
+                        <div class="recipe-info">
+                            <h4>${recipe.recipe_name}</h4>
+                            <span>${recipe.category} · ${recipe.cooking_time}分钟</span>
+                        </div>
+                        <div class="recipe-rating">
+                            ⭐ ${(recipe.user_rating || 3).toFixed(1)}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                list.innerHTML = '<div class="empty-state"><p>加载失败，请重试</p></div>';
+            }
+        }
+
+        // Show recipe detail
+        async function showRecipeDetail(recipeId) {
+            try {
+                const response = await fetch(`/api/recipe/${recipeId}`);
+                const dish = await response.json();
+                
+                // Switch to draw tab and show the recipe
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelector('[data-tab="draw"]').classList.add('active');
+                document.getElementById('draw-tab').classList.add('active');
+                
+                document.getElementById('draw-empty').style.display = 'none';
+                renderDish(dish, 'draw-result', false, true);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // ========================
+        // AI Assistant Functions
+        // ========================
+        
+        let currentRecipe = null;
+        
+        function toggleAiChat() {
+            const chat = document.getElementById('ai-chat');
+            chat.classList.toggle('active');
+            
+            if (chat.classList.contains('active') && !document.querySelector('.ai-message')) {
+                addAiMessage('assistant', '👋 你好！我是你的烹饪助手！\n\n有任何烹饪问题都可以问我，比如：\n• 某个步骤怎么操作\n• 食材怎么选购\n• 可以用什么替代\n\n开始做饭吧！🍳');
+            }
+        }
+        
+        function closeAiChat() {
+            document.getElementById('ai-chat').classList.remove('active');
+        }
+        
+        function addAiMessage(type, text) {
+            const messages = document.getElementById('ai-messages');
+            const div = document.createElement('div');
+            div.className = `ai-message ${type}`;
+            div.innerHTML = `<div class="bubble">${text.replace(/\n/g, '<br>')}</div>`;
+            messages.appendChild(div);
+            messages.scrollTop = messages.scrollHeight;
+        }
+        
+        async function sendAiMessage() {
+            const input = document.getElementById('ai-input');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            addAiMessage('user', question);
+            input.value = '';
+            
+            // Show typing indicator
+            addAiMessage('assistant', '正在思考...');
+            
+            try {
+                const response = await fetch('/api/ai/help', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        recipe_name: currentRecipe?.recipe_name || '',
+                        steps: currentRecipe?.instructions?.map(i => i.instruction) || [],
+                        ingredients: currentRecipe?.ingredients?.map(i => i.ingredient_name) || [],
+                        question: question
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Remove typing indicator
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                
+                addAiMessage('assistant', data.response || '抱歉，我暂时无法回答这个问题。');
+            } catch (error) {
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                addAiMessage('assistant', '抱歉，出现了一些问题。请稍后再试。');
+            }
+        }
+        
+        function askQuickQuestion(question) {
+            document.getElementById('ai-input').value = question;
+            sendAiMessage();
+        }
+        
+        async function getStepHelp(recipeId, stepNumber, stepText) {
+            toggleAiChat();
+            addAiMessage('user', `请详细解释第${stepNumber}步`);
+            addAiMessage('assistant', '正在获取详细说明...');
+            
+            try {
+                const response = await fetch(`/api/ai/step/${recipeId}/${stepNumber}`);
+                const data = await response.json();
+                
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                
+                addAiMessage('assistant', data.explanation || `📝 步骤 ${stepNumber}: ${stepText}`);
+            } catch (error) {
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                addAiMessage('assistant', `📝 步骤 ${stepNumber}: ${stepText}\n\n请按照说明操作即可。`);
+            }
+        }
+        
+        // Handle enter key in AI input
+        document.addEventListener('DOMContentLoaded', function() {
+            const aiInput = document.getElementById('ai-input');
+            if (aiInput) {
+                aiInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendAiMessage();
+                    }
+                });
+            }
+        });
+
+        // Initialize
+        loadTomorrow();
+    </script>
+    
+    <!-- AI Assistant Widget -->
+    <div class="ai-assistant">
+        <button class="ai-toggle" onclick="toggleAiChat()" title="烹饪助手">🤖</button>
+    </div>
+    
+    <div class="ai-chat" id="ai-chat">
+        <div class="ai-header">
+            <h3>🤖 烹饪助手</h3>
+            <button class="ai-close" onclick="closeAiChat()">×</button>
+        </div>
+        <div class="ai-messages" id="ai-messages"></div>
+        <div class="quick-questions">
+            <button class="quick-q" onclick="askQuickQuestion('这道菜怎么判断熟没熟？')">判断熟度</button>
+            <button class="quick-q" onclick="askQuickQuestion('火候怎么掌握？')">火候</button>
+            <button class="quick-q" onclick="askQuickQuestion('有什么替代食材？')">替代</button>
+            <button class="quick-q" onclick="askQuickQuestion('做失败了怎么补救？')">补救</button>
+        </div>
+        <div class="ai-input-area">
+            <input type="text" class="ai-input" id="ai-input" placeholder="问我任何烹饪问题...">
+            <button class="ai-send" onclick="sendAiMessage()">➤</button>
+        </div>
+    </div>
+</body>
+</html>

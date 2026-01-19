@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "breakfast-decision"
+version = "1.0.0"
+description = "早餐决策系统 - Daily Breakfast Decision System with AI Assistant"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "flask>=2.0.0",
+    "flask-cors>=3.0.0",
+    "python-dotenv>=1.0.0",
+    "gunicorn>=21.0.0",
+    "apscheduler>=3.10.0",
+    "openai>=1.0.0",
+    "twilio>=8.0.0",
+    "pytz>=2023.3",
+]
+
+[tool.setuptools]
+packages = ["."]

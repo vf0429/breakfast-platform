@@ -1,0 +1,10 @@
+# Breakfast Decision System
+# 早餐决策系统
+
+flask>=2.0.0
+flask-cors>=3.0.0
+python-dotenv>=1.0.0
+gunicorn>=21.0.0
+apscheduler>=3.10.0
+openai>=1.0.0
+twilio>=8.0.0
