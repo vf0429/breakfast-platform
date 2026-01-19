@@ -304,6 +304,11 @@ def get_recipe(recipe_id):
     return jsonify(result)
 
 
+@app.route('/health')
+def health_check():
+    """Lightweight health check for deployment."""
+    return jsonify({'status': 'healthy', 'time': datetime.now().isoformat()}), 200
+
 @app.route('/api/tomorrow', methods=['GET'])
 def get_tomorrow_meal():
     """Get the confirmed meal for tomorrow."""
