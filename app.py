@@ -579,4 +579,6 @@ if __name__ == '__main__':
     
     print("🍳 Starting Breakfast Decision System...")
     print("📍 Open http://localhost:5000 in your browser")
-    app.run(debug=True, port=5000)
+    print("📱 Phone Access: http://<your-ip-address>:5000")
+    # Host 0.0.0.0 is crucial for network access
+    app.run(host='0.0.0.0', debug=True, port=5000)

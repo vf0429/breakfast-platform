@@ -5,7 +5,9 @@ builder = "nixpacks"
 [deploy]
 startCommand = "python init_db.py && gunicorn server:app --bind 0.0.0.0:$PORT"
 healthcheckPath = "/"
-healthcheckTimeout = 100
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 5
 
 [[services]]
 name = "web"
