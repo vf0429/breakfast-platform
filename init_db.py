@@ -101,302 +101,6 @@ def insert_recipes(conn):
     # Recipe data extracted from the document
     recipes = [
         {
-            "recipe_name": "清蒸鸡蛋",
-            "recipe_name_en": "Steamed Egg",
-            "category": "蛋白质",
-            "difficulty": 1,
-            "cooking_time": 10,
-            "source_article": "合集3.0｜吃对早餐 把自己养的气血丰盈",
-            "source_author": "养生的鹅er",
-            "source_link": "https://www.xiaohongshu.com/explore/6691e8960000000025004f3f",
-            "publish_date": "2025-01-07",
-            "likes_count": 11000,
-            "ingredients": [
-                {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": ""},
-                {"name": "温水", "quantity": 3, "unit": "汤匙", "notes": "约45ml"},
-                {"name": "盐", "quantity": 0.5, "unit": "克", "notes": "少许"}
-            ],
-            "instructions": [
-                {"step": 1, "description": "鸡蛋打入碗中，加温水搅拌均匀"},
-                {"step": 2, "description": "过筛去泡沫"},
-                {"step": 3, "description": "盖保鲜膜（戳几个小孔透气）"},
-                {"step": 4, "description": "大火烧水后，中火蒸8-10分钟"}
-            ],
-            "nutrition": {"calories": 155, "protein": 12, "carbohydrate": 1.1, "fat": 11, "fiber": 0}
-        },
-        {
-            "recipe_name": "水煮鸡蛋",
-            "recipe_name_en": "Boiled Egg",
-            "category": "蛋白质",
-            "difficulty": 1,
-            "cooking_time": 12,
-            "source_article": "一人食早餐沙拉合集🥗健康美味一盘端🍽",
-            "source_author": "奶茶味可可",
-            "source_link": "https://www.xiaohongshu.com/explore/6612088e000000001a01717c",
-            "publish_date": "2024-04-07",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": ""},
-                {"name": "清水", "quantity": 500, "unit": "ml", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "冷水下锅放入鸡蛋"},
-                {"step": 2, "description": "大火烧开后转中火"},
-                {"step": 3, "description": "煮7-8分钟（溏心蛋）或10分钟（全熟）"},
-                {"step": 4, "description": "冷水冰镇，剥壳"}
-            ],
-            "nutrition": {"calories": 155, "protein": 12, "carbohydrate": 1.1, "fat": 11, "fiber": 0}
-        },
-        {
-            "recipe_name": "烤红薯",
-            "recipe_name_en": "Baked Sweet Potato",
-            "category": "粗粮谷物",
-            "difficulty": 1,
-            "cooking_time": 20,
-            "source_article": "吃瘦不饿瘦｜一周低卡减脂早餐合集",
-            "source_author": "其其轻食餐",
-            "source_link": "https://www.xiaohongshu.com/explore/682c8ca0000000001101e744",
-            "publish_date": "2025-05-20",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "红薯", "quantity": 200, "unit": "g", "notes": "中等大小1个"},
-                {"name": "油", "quantity": 0.5, "unit": "汤匙", "notes": "可选"}
-            ],
-            "instructions": [
-                {"step": 1, "description": "红薯洗净、沥干"},
-                {"step": 2, "description": "高压锅蒸15分钟快速熟透 或 微波炉5分钟"},
-                {"step": 3, "description": "烤箱180°烤8分钟至表面焦香"},
-                {"step": 4, "description": "切块即可"}
-            ],
-            "nutrition": {"calories": 103, "protein": 1.6, "carbohydrate": 26, "fat": 0.1, "fiber": 3.6}
-        },
-        {
-            "recipe_name": "清蒸玉米",
-            "recipe_name_en": "Steamed Corn",
-            "category": "粗粮谷物",
-            "difficulty": 1,
-            "cooking_time": 20,
-            "source_article": "吃瘦不饿瘦｜一周低卡减脂早餐合集",
-            "source_author": "其其轻食餐",
-            "source_link": "https://www.xiaohongshu.com/explore/682c8ca0000000001101e744",
-            "publish_date": "2025-05-20",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "玉米", "quantity": 1, "unit": "根", "notes": ""},
-                {"name": "清水", "quantity": 800, "unit": "ml", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "玉米剥去外层叶子"},
-                {"step": 2, "description": "放入蒸锅中"},
-                {"step": 3, "description": "大火蒸15-20分钟 或 高压锅8分钟"}
-            ],
-            "nutrition": {"calories": 96, "protein": 3.3, "carbohydrate": 19, "fat": 1.3, "fiber": 2.4}
-        },
-        {
-            "recipe_name": "虾仁沙拉",
-            "recipe_name_en": "Shrimp Salad",
-            "category": "蛋白质",
-            "difficulty": 2,
-            "cooking_time": 10,
-            "source_article": "一人食早餐沙拉合集🥗健康美味一盘端🍽",
-            "source_author": "奶茶味可可",
-            "source_link": "https://www.xiaohongshu.com/explore/6612088e000000001a01717c",
-            "publish_date": "2024-04-07",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "虾仁", "quantity": 150, "unit": "g", "notes": ""},
-                {"name": "生菜", "quantity": 50, "unit": "g", "notes": ""},
-                {"name": "番茄", "quantity": 100, "unit": "g", "notes": ""},
-                {"name": "水煮蛋", "quantity": 2, "unit": "个", "notes": ""},
-                {"name": "橄榄油", "quantity": 1, "unit": "汤匙", "notes": ""},
-                {"name": "盐", "quantity": 0.5, "unit": "克", "notes": ""},
-                {"name": "黑胡椒", "quantity": 0.3, "unit": "克", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "虾仁用盐腌制5分钟"},
-                {"step": 2, "description": "热水煮1-2分钟至变色"},
-                {"step": 3, "description": "生菜洗净、番茄切片"},
-                {"step": 4, "description": "将所有食材拼盘"},
-                {"step": 5, "description": "淋橄榄油，撒盐黑胡椒"}
-            ],
-            "nutrition": {"calories": 280, "protein": 25, "carbohydrate": 8, "fat": 14, "fiber": 2}
-        },
-        {
-            "recipe_name": "香煎鸡胸肉",
-            "recipe_name_en": "Pan-fried Chicken Breast",
-            "category": "蛋白质",
-            "difficulty": 2,
-            "cooking_time": 12,
-            "source_article": "一人食早餐沙拉合集🥗健康美味一盘端🍽",
-            "source_author": "奶茶味可可",
-            "source_link": "https://www.xiaohongshu.com/explore/6612088e000000001a01717c",
-            "publish_date": "2024-04-07",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "鸡胸肉", "quantity": 150, "unit": "g", "notes": ""},
-                {"name": "盐", "quantity": 0.5, "unit": "克", "notes": ""},
-                {"name": "黑胡椒", "quantity": 0.3, "unit": "克", "notes": ""},
-                {"name": "橄榄油", "quantity": 1, "unit": "汤匙", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "鸡胸肉用刀背拍松"},
-                {"step": 2, "description": "用盐和黑胡椒腌制10分钟"},
-                {"step": 3, "description": "平底锅加油，中火煎至两面金黄"},
-                {"step": 4, "description": "切片装盘"}
-            ],
-            "nutrition": {"calories": 200, "protein": 35, "carbohydrate": 0, "fat": 6, "fiber": 0}
-        },
-        {
-            "recipe_name": "牛油果吐司",
-            "recipe_name_en": "Avocado Toast",
-            "category": "粗粮谷物",
-            "difficulty": 1,
-            "cooking_time": 5,
-            "source_article": "一人食早餐沙拉合集🥗健康美味一盘端🍽",
-            "source_author": "奶茶味可可",
-            "source_link": "https://www.xiaohongshu.com/explore/6612088e000000001a01717c",
-            "publish_date": "2024-04-07",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "全麦吐司", "quantity": 2, "unit": "片", "notes": ""},
-                {"name": "牛油果", "quantity": 1, "unit": "个", "notes": ""},
-                {"name": "盐", "quantity": 0.3, "unit": "克", "notes": ""},
-                {"name": "柠檬汁", "quantity": 1, "unit": "茶匙", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "吐司烤至金黄"},
-                {"step": 2, "description": "牛油果切开去核，捣成泥"},
-                {"step": 3, "description": "加盐和柠檬汁拌匀"},
-                {"step": 4, "description": "涂在吐司上即可"}
-            ],
-            "nutrition": {"calories": 320, "protein": 8, "carbohydrate": 30, "fat": 20, "fiber": 8}
-        },
-        {
-            "recipe_name": "燕麦粥",
-            "recipe_name_en": "Oatmeal Porridge",
-            "category": "粗粮谷物",
-            "difficulty": 1,
-            "cooking_time": 10,
-            "source_article": "合集3.0｜吃对早餐 把自己养的气血丰盈",
-            "source_author": "养生的鹅er",
-            "source_link": "https://www.xiaohongshu.com/explore/6691e8960000000025004f3f",
-            "publish_date": "2025-01-07",
-            "likes_count": 11000,
-            "ingredients": [
-                {"name": "燕麦", "quantity": 50, "unit": "g", "notes": ""},
-                {"name": "牛奶", "quantity": 200, "unit": "ml", "notes": ""},
-                {"name": "蜂蜜", "quantity": 1, "unit": "汤匙", "notes": "可选"},
-                {"name": "水果", "quantity": 50, "unit": "g", "notes": "蓝莓/香蕉等"}
-            ],
-            "instructions": [
-                {"step": 1, "description": "燕麦加牛奶煮沸"},
-                {"step": 2, "description": "小火煮5分钟至浓稠"},
-                {"step": 3, "description": "加蜂蜜和水果装饰"}
-            ],
-            "nutrition": {"calories": 280, "protein": 10, "carbohydrate": 45, "fat": 8, "fiber": 5}
-        },
-        {
-            "recipe_name": "酸奶水果杯",
-            "recipe_name_en": "Yogurt Fruit Cup",
-            "category": "蛋白质",
-            "difficulty": 1,
-            "cooking_time": 5,
-            "source_article": "吃瘦不饿瘦｜一周低卡减脂早餐合集",
-            "source_author": "其其轻食餐",
-            "source_link": "https://www.xiaohongshu.com/explore/682c8ca0000000001101e744",
-            "publish_date": "2025-05-20",
-            "likes_count": 14000,
-            "ingredients": [
-                {"name": "希腊酸奶", "quantity": 150, "unit": "g", "notes": ""},
-                {"name": "蓝莓", "quantity": 30, "unit": "g", "notes": ""},
-                {"name": "草莓", "quantity": 50, "unit": "g", "notes": ""},
-                {"name": "燕麦", "quantity": 20, "unit": "g", "notes": ""},
-                {"name": "蜂蜜", "quantity": 1, "unit": "茶匙", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "酸奶倒入杯中"},
-                {"step": 2, "description": "水果洗净切块"},
-                {"step": 3, "description": "撒上燕麦和蜂蜜"}
-            ],
-            "nutrition": {"calories": 200, "protein": 15, "carbohydrate": 25, "fat": 5, "fiber": 3}
-        },
-        {
-            "recipe_name": "蔬菜煎蛋",
-            "recipe_name_en": "Vegetable Omelette",
-            "category": "蛋白质",
-            "difficulty": 2,
-            "cooking_time": 10,
-            "source_article": "合集3.0｜吃对早餐 把自己养的气血丰盈",
-            "source_author": "养生的鹅er",
-            "source_link": "https://www.xiaohongshu.com/explore/6691e8960000000025004f3f",
-            "publish_date": "2025-01-07",
-            "likes_count": 11000,
-            "ingredients": [
-                {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": ""},
-                {"name": "番茄", "quantity": 50, "unit": "g", "notes": ""},
-                {"name": "青椒", "quantity": 30, "unit": "g", "notes": ""},
-                {"name": "洋葱", "quantity": 20, "unit": "g", "notes": ""},
-                {"name": "盐", "quantity": 0.5, "unit": "克", "notes": ""},
-                {"name": "油", "quantity": 1, "unit": "汤匙", "notes": ""}
-            ],
-            "instructions": [
-                {"step": 1, "description": "蔬菜切丁"},
-                {"step": 2, "description": "鸡蛋打散加盐"},
-                {"step": 3, "description": "平底锅加油，倒入蛋液"},
-                {"step": 4, "description": "撒上蔬菜丁，两面煎熟"}
-            ],
-            "nutrition": {"calories": 220, "protein": 14, "carbohydrate": 8, "fat": 15, "fiber": 2}
-        },
-        {
-            "recipe_name": "豆浆",
-            "recipe_name_en": "Soy Milk",
-            "category": "饮品",
-            "difficulty": 1,
-            "cooking_time": 15,
-            "source_article": "合集3.0｜吃对早餐 把自己养的气血丰盈",
-            "source_author": "养生的鹅er",
-            "source_link": "https://www.xiaohongshu.com/explore/6691e8960000000025004f3f",
-            "publish_date": "2025-01-07",
-            "likes_count": 11000,
-            "ingredients": [
-                {"name": "黄豆", "quantity": 50, "unit": "g", "notes": "提前泡8小时"},
-                {"name": "水", "quantity": 500, "unit": "ml", "notes": ""},
-                {"name": "糖", "quantity": 1, "unit": "汤匙", "notes": "可选"}
-            ],
-            "instructions": [
-                {"step": 1, "description": "黄豆提前泡发"},
-                {"step": 2, "description": "放入豆浆机加水"},
-                {"step": 3, "description": "选择豆浆模式"},
-                {"step": 4, "description": "过滤后加糖调味"}
-            ],
-            "nutrition": {"calories": 80, "protein": 7, "carbohydrate": 4, "fat": 4, "fiber": 1}
-        },
-        {
-            "recipe_name": "小米粥",
-            "recipe_name_en": "Millet Porridge",
-            "category": "粗粮谷物",
-            "difficulty": 1,
-            "cooking_time": 30,
-            "source_article": "合集3.0｜吃对早餐 把自己养的气血丰盈",
-            "source_author": "养生的鹅er",
-            "source_link": "https://www.xiaohongshu.com/explore/6691e8960000000025004f3f",
-            "publish_date": "2025-01-07",
-            "likes_count": 11000,
-            "ingredients": [
-                {"name": "小米", "quantity": 50, "unit": "g", "notes": ""},
-                {"name": "水", "quantity": 500, "unit": "ml", "notes": ""},
-                {"name": "红枣", "quantity": 3, "unit": "颗", "notes": "可选"},
-                {"name": "枸杞", "quantity": 5, "unit": "g", "notes": "可选"}
-            ],
-            "instructions": [
-                {"step": 1, "description": "小米洗净"},
-                {"step": 2, "description": "水烧开后加入小米"},
-                {"step": 3, "description": "小火煮25-30分钟至浓稠"},
-                {"step": 4, "description": "加入红枣枸杞焖5分钟"}
-            ],
-            "nutrition": {"calories": 150, "protein": 4, "carbohydrate": 32, "fat": 1, "fiber": 2}
-        },
-        {
             "recipe_name": "煎蛋火腿豆腐米粉",
             "recipe_name_en": "Rice Noodles with Egg, Ham & Tofu",
             "category": "综合早餐",
@@ -424,8 +128,302 @@ def insert_recipes(conn):
                 {"step": 6, "description": "【装盘】组合所有食材，撒黑芝麻，可淋少许生抽"}
             ],
             "nutrition": {"calories": 550, "protein": 25, "carbohydrate": 65, "fat": 22, "fiber": 6}
-        }
+        },
+    {
+        "recipe_name": "减脂早餐-葱油荞麦面配糖醋煎蛋",
+        "recipe_name_en": "Light Scallion Buckwheat Noodles with Sweet-Sour Fried Eggs",
+        "category": "综合早餐",
+        "difficulty": 2,
+        "cooking_time": 20,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "荞麦葱油速食面", "quantity": 80, "unit": "g", "notes": "干面饼约1份"},
+        {"name": "葱油酱包", "quantity": 15, "unit": "g", "notes": "只用2/3包"},
+        {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": "全蛋煎"},
+        {"name": "油", "quantity": 5, "unit": "g", "notes": "煎蛋用，约1小勺"},
+        {"name": "蒜末", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "生抽", "quantity": 10, "unit": "g", "notes": "糖醋汁"},
+        {"name": "代糖", "quantity": 2, "unit": "g", "notes": "约1小勺"},
+        {"name": "米醋", "quantity": 15, "unit": "g", "notes": ""},
+        {"name": "水", "quantity": 30, "unit": "g", "notes": "调糖醋汁"},
+        {"name": "青菜（小白菜或生菜）", "quantity": 80, "unit": "g", "notes": "焯水"},
+        {"name": "葱花", "quantity": 5, "unit": "g", "notes": "面上点缀"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "荞麦面按说明煮熟沥干，与2/3葱油酱和少量葱花拌匀装碗。"},
+        {"step": 2, "description": "青菜焯水至断生捞出摆盘。"},
+        {"step": 3, "description": "平底锅加少量油煎2个鸡蛋至两面金黄盛出。"},
+        {"step": 4, "description": "锅内下蒜末炒香，加入生抽、米醋、代糖和水煮沸收稍浓，淋在煎蛋上。"},
+        {"step": 5, "description": "将葱油面、糖醋煎蛋和焯青菜一起装盘食用。"}
+        ],
+        "nutrition": {"calories": 560, "protein": 24, "carbohydrate": 65, "fat": 22, "fiber": 6}
+    },
+    {
+        "recipe_name": "减脂早餐-全麦鸡蛋汉堡",
+        "recipe_name_en": "Whole Wheat Egg Burger",
+        "category": "综合早餐",
+        "difficulty": 2,
+        "cooking_time": 25,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "全麦粉", "quantity": 50, "unit": "g", "notes": "面饼用"},
+        {"name": "小麦粉", "quantity": 50, "unit": "g", "notes": "面饼用"},
+        {"name": "清水", "quantity": 80, "unit": "g", "notes": "和面"},
+        {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": "做夹心"},
+        {"name": "牛肉末", "quantity": 100, "unit": "g", "notes": "与鸡蛋同煎"},
+        {"name": "淀粉", "quantity": 10, "unit": "g", "notes": "汉堡肉定型"},
+        {"name": "生抽", "quantity": 5, "unit": "g", "notes": "调牛肉"},
+        {"name": "料酒", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "盐", "quantity": 1, "unit": "g", "notes": ""},
+        {"name": "葱花", "quantity": 5, "unit": "g", "notes": "加入蛋液"},
+        {"name": "辣椒酱", "quantity": 15, "unit": "g", "notes": "抹在汉堡上"},
+        {"name": "油", "quantity": 5, "unit": "g", "notes": "煎饼煎蛋用"},
+        {"name": "炒菠菜", "quantity": 100, "unit": "g", "notes": "配菜"},
+        {"name": "蔬菜汁/青汁", "quantity": 200, "unit": "g", "notes": "饮用"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "全麦粉和小麦粉加水和成面团，醒发后分成小剂子压成圆饼，小火两面煎熟备用。"},
+        {"step": 2, "description": "牛肉末加淀粉、生抽、料酒和少量盐抓匀腌制20分钟。"},
+        {"step": 3, "description": "鸡蛋打散加入葱花，倒入模具中铺底，上面铺一层腌好的牛肉末，小火煎熟成厚蛋肉饼。"},
+        {"step": 4, "description": "将煎好的全麦饼横切，对夹厚蛋肉饼，表面抹上辣椒酱。"},
+        {"step": 5, "description": "另起锅清炒菠菜，加少量盐调味，搭配青汁与汉堡一起食用。"}
+        ],
+        "nutrition": {"calories": 470, "protein": 30, "carbohydrate": 45, "fat": 15, "fiber": 7}
+    },
+    {
+        "recipe_name": "早餐-大虾全麦蒸饺",
+        "recipe_name_en": "Whole Wheat Shrimp Steamed Dumplings",
+        "category": "综合早餐",
+        "difficulty": 3,
+        "cooking_time": 30,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "虾仁带尾", "quantity": 8, "unit": "只", "notes": "去壳留尾"},
+        {"name": "猪肉末或鸡肉末", "quantity": 150, "unit": "g", "notes": "馅料"},
+        {"name": "胡萝卜", "quantity": 20, "unit": "g", "notes": "切碎"},
+        {"name": "木耳", "quantity": 15, "unit": "g", "notes": "泡发切碎"},
+        {"name": "芹菜", "quantity": 20, "unit": "g", "notes": "切碎"},
+        {"name": "香菇", "quantity": 20, "unit": "g", "notes": "切碎"},
+        {"name": "葱", "quantity": 10, "unit": "g", "notes": "切碎"},
+        {"name": "全麦饺子皮", "quantity": 8, "unit": "张", "notes": "自制或成品"},
+        {"name": "生抽", "quantity": 5, "unit": "g", "notes": "调馅"},
+        {"name": "蚝油", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "盐", "quantity": 1, "unit": "g", "notes": ""},
+        {"name": "胡椒粉", "quantity": 0.5, "unit": "g", "notes": ""},
+        {"name": "无糖豆浆粉", "quantity": 20, "unit": "g", "notes": "豆浆"},
+        {"name": "糯小圆子", "quantity": 15, "unit": "g", "notes": "加入豆浆"},
+        {"name": "水", "quantity": 250, "unit": "g", "notes": "冲豆浆粉"},
+        {"name": "黄瓜", "quantity": 80, "unit": "g", "notes": "切薄片卷成黄瓜卷"},
+        {"name": "茶叶蛋", "quantity": 1, "unit": "个", "notes": "配菜"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "将肉末与胡萝卜、木耳、芹菜、香菇和葱碎混合，加入生抽、蚝油、盐和胡椒粉搅拌成馅。"},
+        {"step": 2, "description": "全麦饺子皮上先放少量馅，再放整只带尾虾仁，包成敞口蒸饺形状。"},
+        {"step": 3, "description": "蒸锅水开后放入蒸饺，大火蒸约15分钟至熟。"},
+        {"step": 4, "description": "无糖豆浆粉加水煮开，放入小圆子煮至浮起成豆浆小圆子汤。"},
+        {"step": 5, "description": "黄瓜切薄片卷成黄瓜卷，搭配茶叶蛋、蒸饺和豆浆一起装盘食用。"}
+        ],
+        "nutrition": {"calories": 370, "protein": 28, "carbohydrate": 35, "fat": 10, "fiber": 5}
+    },
+    {
+        "recipe_name": "早餐-低卡豆腐脑配饺子蔬菜蛋",
+        "recipe_name_en": "Low-Calorie Tofu Pudding with Dumplings, Vegetables and Egg",
+        "category": "综合早餐",
+        "difficulty": 2,
+        "cooking_time": 25,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "嫩豆腐", "quantity": 200, "unit": "g", "notes": "整块冲热做豆腐脑"},
+        {"name": "火腿丝", "quantity": 20, "unit": "g", "notes": ""},
+        {"name": "木耳丝", "quantity": 15, "unit": "g", "notes": ""},
+        {"name": "金针菇", "quantity": 20, "unit": "g", "notes": "切短"},
+        {"name": "胡萝卜丝", "quantity": 15, "unit": "g", "notes": ""},
+        {"name": "生抽", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "蚝油", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "醋", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "胡椒粉", "quantity": 0.5, "unit": "g", "notes": ""},
+        {"name": "水或高汤", "quantity": 250, "unit": "g", "notes": "煮豆腐脑汤底"},
+        {"name": "鸡蛋", "quantity": 1, "unit": "个", "notes": "打入汤中成蛋花"},
+        {"name": "香菜", "quantity": 5, "unit": "g", "notes": "出锅撒上"},
+        {"name": "速冻饺子", "quantity": 3, "unit": "个", "notes": "水煮"},
+        {"name": "西兰花", "quantity": 80, "unit": "g", "notes": "焯水"},
+        {"name": "水煮蛋", "quantity": 1, "unit": "个", "notes": "对半切"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "嫩豆腐表面冲热水后切块放入碗中备用。"},
+        {"step": 2, "description": "锅中加入水或高汤，下火腿丝、木耳丝、金针菇和胡萝卜丝煮至断生。"},
+        {"step": 3, "description": "加入生抽、蚝油、醋和胡椒粉调味，倒入豆腐碗中。"},
+        {"step": 4, "description": "再次烧开后打入蛋液搅动成蛋花，撒香菜即可成低卡豆腐脑。"},
+        {"step": 5, "description": "同时煮熟饺子和西兰花，水煮蛋切片，与豆腐脑一起装盘。"}
+        ],
+        "nutrition": {"calories": 450, "protein": 28, "carbohydrate": 40, "fat": 16, "fiber": 6}
+    },
+    {
+        "recipe_name": "早餐-鸡肉玉米蒸包配冬瓜口蘑汤",
+        "recipe_name_en": "Chicken Corn Steamed Buns with Winter Melon Mushroom Soup",
+        "category": "综合早餐",
+        "difficulty": 3,
+        "cooking_time": 35,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "鸡胸肉末", "quantity": 150, "unit": "g", "notes": ""},
+        {"name": "玉米粒", "quantity": 50, "unit": "g", "notes": ""},
+        {"name": "胡萝卜丁", "quantity": 20, "unit": "g", "notes": ""},
+        {"name": "香菇丁", "quantity": 30, "unit": "g", "notes": ""},
+        {"name": "葱花", "quantity": 10, "unit": "g", "notes": ""},
+        {"name": "生抽", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "蚝油", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "盐", "quantity": 1, "unit": "g", "notes": ""},
+        {"name": "胡椒粉", "quantity": 0.5, "unit": "g", "notes": ""},
+        {"name": "饺子皮或云吞皮", "quantity": 10, "unit": "张", "notes": "擀薄做蒸包皮"},
+        {"name": "腌黄瓜", "quantity": 30, "unit": "g", "notes": "配菜"},
+        {"name": "茶叶蛋", "quantity": 2, "unit": "个", "notes": ""},
+        {"name": "冬瓜", "quantity": 150, "unit": "g", "notes": "切块"},
+        {"name": "口蘑", "quantity": 80, "unit": "g", "notes": "切片"},
+        {"name": "水", "quantity": 400, "unit": "g", "notes": "煮汤"},
+        {"name": "盐（汤用）", "quantity": 1, "unit": "g", "notes": ""},
+        {"name": "香菜或葱花（汤用）", "quantity": 5, "unit": "g", "notes": ""}
+        ],
+        "instructions": [
+        {"step": 1, "description": "鸡肉末与玉米粒、胡萝卜丁、香菇丁和葱花混合，加入生抽、蚝油、盐和胡椒粉拌成馅。"},
+        {"step": 2, "description": "每张饺子皮擀薄，包入适量鸡肉玉米馅，收口成小蒸包。"},
+        {"step": 3, "description": "蒸锅水开后放入蒸包，大火蒸约15分钟至熟。"},
+        {"step": 4, "description": "锅中下少量油炒香口蘑片，加水煮开后加入冬瓜块煮至透明软熟，调入盐并撒香菜或葱花。"},
+        {"step": 5, "description": "蒸包配茶叶蛋和腌黄瓜装盘，配冬瓜口蘑汤一起食用。"}
+        ],
+        "nutrition": {"calories": 430, "protein": 30, "carbohydrate": 45, "fat": 10, "fiber": 5}
+    },
+    {
+        "recipe_name": "早餐-燕皮三鲜馄饨配煎蛋和西柚",
+        "recipe_name_en": "Three-Delicacy Wonton in Broth with Fried Egg and Grapefruit",
+        "category": "综合早餐",
+        "difficulty": 3,
+        "cooking_time": 30,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "燕皮馄饨皮", "quantity": 15, "unit": "张", "notes": "或薄云吞皮"},
+        {"name": "虾仁碎", "quantity": 80, "unit": "g", "notes": ""},
+        {"name": "猪瘦肉末", "quantity": 60, "unit": "g", "notes": ""},
+        {"name": "木耳碎", "quantity": 15, "unit": "g", "notes": ""},
+        {"name": "胡萝卜碎", "quantity": 20, "unit": "g", "notes": ""},
+        {"name": "韭菜碎", "quantity": 20, "unit": "g", "notes": ""},
+        {"name": "生抽", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "蚝油", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "盐", "quantity": 1, "unit": "g", "notes": ""},
+        {"name": "胡椒粉", "quantity": 0.5, "unit": "g", "notes": ""},
+        {"name": "香油", "quantity": 2, "unit": "g", "notes": ""},
+        {"name": "清水或高汤", "quantity": 400, "unit": "g", "notes": "煮馄饨"},
+        {"name": "枸杞、葱花", "quantity": 5, "unit": "g", "notes": "汤面点缀"},
+        {"name": "鸡蛋", "quantity": 1, "unit": "个", "notes": "煎蛋"},
+        {"name": "油", "quantity": 3, "unit": "g", "notes": "煎蛋用"},
+        {"name": "无糖酱油", "quantity": 5, "unit": "g", "notes": "淋在煎蛋上"},
+        {"name": "西柚", "quantity": 150, "unit": "g", "notes": "去皮分瓣"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "将虾仁碎、瘦肉末、木耳碎、胡萝卜碎和韭菜碎混合，加入生抽、蚝油、盐、胡椒粉和香油拌匀成三鲜馅。"},
+        {"step": 2, "description": "每张燕皮包入少量三鲜馅，对折并收紧两角成馄饨。"},
+        {"step": 3, "description": "锅中烧开清水或高汤，下馄饨煮至全部浮起再煮2分钟，出锅撒枸杞和葱花。"},
+        {"step": 4, "description": "平底锅放少量油煎1个鸡蛋至八分熟，出锅后表面淋少量无糖酱油。"},
+        {"step": 5, "description": "西柚去皮分瓣，与馄饨汤和煎蛋一起装盘食用。"}
+        ],
+        "nutrition": {"calories": 335, "protein": 24, "carbohydrate": 30, "fat": 10, "fiber": 4}
+    },
+    {
+        "recipe_name": "减脂早餐-肉酱拌面配秋葵炒蛋",
+        "recipe_name_en": "Minced Meat Sauce Noodles with Okra Scrambled Eggs",
+        "category": "综合早餐",
+        "difficulty": 2,
+        "cooking_time": 25,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "粗面或意面", "quantity": 80, "unit": "g", "notes": "干面"},
+        {"name": "牛肉末", "quantity": 50, "unit": "g", "notes": ""},
+        {"name": "小米辣", "quantity": 5, "unit": "g", "notes": "切圈"},
+        {"name": "葱花", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "生抽", "quantity": 15, "unit": "g", "notes": ""},
+        {"name": "蚝油", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "豆瓣酱/辣酱", "quantity": 5, "unit": "g", "notes": ""},
+        {"name": "糖或代糖", "quantity": 2, "unit": "g", "notes": ""},
+        {"name": "清水", "quantity": 50, "unit": "g", "notes": "调肉酱"},
+        {"name": "油", "quantity": 5, "unit": "g", "notes": "炒肉用"},
+        {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": "秋葵炒蛋"},
+        {"name": "秋葵", "quantity": 80, "unit": "g", "notes": "切片"},
+        {"name": "盐", "quantity": 0.5, "unit": "g", "notes": "炒蛋调味"},
+        {"name": "玉米须茶/谷物茶饮", "quantity": 250, "unit": "g", "notes": "随餐饮品"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "面条煮熟沥干备用。"},
+        {"step": 2, "description": "锅中放少量油炒香牛肉末，加入小米辣和葱花翻炒。"},
+        {"step": 3, "description": "加入生抽、蚝油、豆瓣酱、糖和少量水，小火收成浓稠肉酱。"},
+        {"step": 4, "description": "将肉酱浇在面条上拌匀。"},
+        {"step": 5, "description": "另起锅少油炒熟秋葵片，倒入打散的鸡蛋加盐炒熟，配在一旁并搭配茶饮食用。"}
+        ],
+        "nutrition": {"calories": 510, "protein": 26, "carbohydrate": 60, "fat": 18, "fiber": 5}
+    },
+    {
+        "recipe_name": "减脂早餐-桂花圆子红豆汤配蔬菜厚蛋烧",
+        "recipe_name_en": "Osmanthus Glutinous Rice Ball Red Bean Soup with Veggie Thick Omelette",
+        "category": "综合早餐",
+        "difficulty": 2,
+        "cooking_time": 30,
+        "source_article": "一周不重样中式减脂早餐",
+        "source_author": "小红书博主（未署名）",
+        "source_link": "",
+        "publish_date": "2025-01-01",
+        "likes_count": 0,
+        "ingredients": [
+        {"name": "即食红豆片", "quantity": 50, "unit": "g", "notes": ""},
+        {"name": "小圆子（糯米丸子）", "quantity": 20, "unit": "g", "notes": ""},
+        {"name": "桂花", "quantity": 2, "unit": "g", "notes": "干桂花"},
+        {"name": "水", "quantity": 500, "unit": "g", "notes": "煮红豆汤"},
+        {"name": "代糖", "quantity": 3, "unit": "g", "notes": "按口味调整"},
+        {"name": "鸡蛋", "quantity": 2, "unit": "个", "notes": "厚蛋烧用"},
+        {"name": "蛋清", "quantity": 1, "unit": "个", "notes": "增加蛋白质"},
+        {"name": "西兰花碎", "quantity": 50, "unit": "g", "notes": "焯熟切碎"},
+        {"name": "全麦吐司片", "quantity": 20, "unit": "g", "notes": "切小丁加入蛋液"},
+        {"name": "低脂芝士片", "quantity": 10, "unit": "g", "notes": "切碎"},
+        {"name": "盐", "quantity": 0.5, "unit": "g", "notes": ""},
+        {"name": "油", "quantity": 3, "unit": "g", "notes": "煎厚蛋烧用"}
+        ],
+        "instructions": [
+        {"step": 1, "description": "锅中加入水和红豆片煮开，小火煮至汤汁浓稠，加入代糖调味。"},
+        {"step": 2, "description": "放入小圆子煮至浮起，关火后撒入桂花即成桂花圆子红豆汤。"},
+        {"step": 3, "description": "鸡蛋与蛋清打散，加入西兰花碎、全麦吐司丁、芝士碎和少量盐拌匀。"},
+        {"step": 4, "description": "小火少油倒入蛋液慢慢卷起，重复卷动直至成厚蛋卷，切段装盘。"},
+        {"step": 5, "description": "红豆汤装碗，与蔬菜厚蛋烧一起食用。"}
+        ],
+        "nutrition": {"calories": 460, "protein": 22, "carbohydrate": 55, "fat": 14, "fiber": 7}
+    }
     ]
+
     
     for recipe in recipes:
         # Insert recipe
