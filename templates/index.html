@@ -598,6 +598,90 @@
             text-decoration: underline;
         }
 
+        /* Image Upload Styles */
+        .upload-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            opacity: 0.9;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 10px;
+        }
+
+        .upload-progress {
+            margin-top: 10px;
+            text-align: center;
+            color: #666;
+        }
+
+        .recipe-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .recipe-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .recipe-card-meta {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .recipe-card-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .recipe-card-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        .btn-view {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-confirm-card {
+            background: #28a745;
+            color: white;
+        }
+
         @media (max-width: 600px) {
             .ai-chat {
                 width: calc(100% - 40px);
@@ -1077,6 +1161,113 @@
             }
         }
         
+        // ========================
+        // Image Upload Functions
+        // ========================
+        
+        let uploadedImageBase64 = null;
+        
+        function triggerImageUpload() {
+            document.getElementById('recipe-image-input').click();
+        }
+        
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.startsWith('image/')) {
+                addAiMessage('assistant', '❌ 请上传图片文件');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImageBase64 = e.target.result;
+                
+                // Show preview
+                const preview = document.getElementById('image-preview');
+                preview.innerHTML = `
+                    <img src="${uploadedImageBase64}" alt="预览">
+                    <p style="margin-top: 5px; font-size: 0.85em; color: #666;">点击"识别食谱"开始分析</p>
+                `;
+                preview.style.display = 'block';
+                
+                document.getElementById('extract-btn').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        async function extractRecipeFromImage() {
+            if (!uploadedImageBase64) {
+                addAiMessage('assistant', '请先上传图片');
+                return;
+            }
+            
+            addAiMessage('user', '📷 [上传了食谱图片]');
+            addAiMessage('assistant', '🔍 正在识别图片中的食谱信息，请稍候...');
+            
+            // Hide preview and button
+            document.getElementById('image-preview').style.display = 'none';
+            document.getElementById('extract-btn').style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/ai/upload-recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: uploadedImageBase64 })
+                });
+                
+                const data = await response.json();
+                
+                // Remove "processing" message
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                
+                if (data.success) {
+                    const recipe = data.recipe;
+                    
+                    // Show success message with recipe card
+                    const ingredientsList = recipe.ingredients.map(i => `• ${i.ingredient_name}`).join('\n');
+                    
+                    addAiMessage('assistant', `✅ ${data.message}\n\n📋 **${recipe.recipe_name}**\n${recipe.recipe_name_en || ''}\n\n⏱️ ${recipe.cooking_time}分钟 | 难度 ${'⭐'.repeat(recipe.difficulty)}\n\n🛒 食材:\n${ingredientsList}`);
+                    
+                    // Add recipe card with actions
+                    const cardHtml = `
+                        <div class="recipe-card">
+                            <h4>🎉 新添加: ${recipe.recipe_name}</h4>
+                            <div class="recipe-card-meta">
+                                ${recipe.category} · ${recipe.cooking_time}分钟 · ${recipe.calories || '?'} kcal
+                            </div>
+                            <div class="recipe-card-actions">
+                                <button class="btn-view" onclick="showRecipeDetail(${recipe.id}); closeAiChat();">查看详情</button>
+                                <button class="btn-confirm-card" onclick="confirmDish(${recipe.id}); closeAiChat();">设为明日早餐</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'ai-message assistant';
+                    cardDiv.innerHTML = cardHtml;
+                    messages.appendChild(cardDiv);
+                    messages.scrollTop = messages.scrollHeight;
+                    
+                    // Refresh the recipe list
+                    loadAllRecipes();
+                } else {
+                    addAiMessage('assistant', `❌ ${data.error || '识别失败，请重试'}`);
+                }
+                
+            } catch (error) {
+                const messages = document.getElementById('ai-messages');
+                messages.removeChild(messages.lastChild);
+                addAiMessage('assistant', '❌ 上传失败，请检查网络连接后重试');
+            }
+            
+            // Reset
+            uploadedImageBase64 = null;
+            document.getElementById('recipe-image-input').value = '';
+        }
+        
         // Handle enter key in AI input
         document.addEventListener('DOMContentLoaded', function() {
             const aiInput = document.getElementById('ai-input');
@@ -1104,6 +1295,19 @@
             <button class="ai-close" onclick="closeAiChat()">×</button>
         </div>
         <div class="ai-messages" id="ai-messages"></div>
+        
+        <!-- Upload Area -->
+        <div class="upload-area">
+            <input type="file" id="recipe-image-input" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+            <button class="upload-btn" onclick="triggerImageUpload()">
+                📷 上传食谱图片添加新菜品
+            </button>
+            <div id="image-preview" class="image-preview" style="display: none;"></div>
+            <button id="extract-btn" class="upload-btn" style="display: none; margin-top: 10px; background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);" onclick="extractRecipeFromImage()">
+                🔍 识别食谱
+            </button>
+        </div>
+        
         <div class="quick-questions">
             <button class="quick-q" onclick="askQuickQuestion('这道菜怎么判断熟没熟？')">判断熟度</button>
             <button class="quick-q" onclick="askQuickQuestion('火候怎么掌握？')">火候</button>

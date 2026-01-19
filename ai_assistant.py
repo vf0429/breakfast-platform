@@ -184,3 +184,188 @@ def get_ingredient_tips(ingredient_name):
         
     except Exception as e:
         return f"💡 {ingredient_name}: 选择新鲜的食材，注意保存条件。"
+
+
+def extract_recipe_from_image(image_base64):
+    """
+    Extract recipe information from an image using OpenAI Vision.
+    
+    Args:
+        image_base64: Base64 encoded image data
+    
+    Returns:
+        Dictionary with recipe data or error message
+    """
+    client = get_openai_client()
+    
+    if not client:
+        return {
+            "success": False,
+            "error": "OpenAI API 未配置。请在 .env 文件中设置 OPENAI_API_KEY。"
+        }
+    
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {
+                    "role": "system",
+                    "content": """你是一个专业的食谱识别助手。分析图片中的食谱信息，提取以下内容并以JSON格式返回：
+
+{
+    "recipe_name": "菜品中文名",
+    "recipe_name_en": "English Name",
+    "category": "分类（蛋白质/粗粮谷物/蔬菜/饮品）",
+    "difficulty": 1-3的数字（1简单，2中等，3复杂）,
+    "cooking_time": 烹饪时间（分钟，数字）,
+    "ingredients": [
+        {"name": "食材名", "quantity": 数量, "unit": "单位", "notes": "备注"}
+    ],
+    "instructions": [
+        {"step": 1, "description": "步骤描述"}
+    ],
+    "nutrition": {
+        "calories": 热量数字,
+        "protein": 蛋白质克数,
+        "carbohydrate": 碳水克数,
+        "fat": 脂肪克数,
+        "fiber": 纤维克数
+    }
+}
+
+如果图片不包含食谱信息，返回：{"success": false, "error": "无法识别食谱信息"}
+如果某些信息无法确定，使用合理的估计值。
+只返回JSON，不要其他文字。"""
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "请分析这张图片中的食谱信息，提取菜名、食材、步骤等，并以JSON格式返回。"
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": f"data:image/jpeg;base64,{image_base64}"
+                            }
+                        }
+                    ]
+                }
+            ],
+            max_tokens=1500
+        )
+        
+        result_text = response.choices[0].message.content
+        
+        # Clean up the response - remove markdown code blocks if present
+        if result_text.startswith("```"):
+            lines = result_text.split("\n")
+            result_text = "\n".join(lines[1:-1])
+        
+        import json
+        recipe_data = json.loads(result_text)
+        
+        if "error" in recipe_data:
+            return {"success": False, "error": recipe_data["error"]}
+        
+        recipe_data["success"] = True
+        return recipe_data
+        
+    except json.JSONDecodeError as e:
+        return {
+            "success": False,
+            "error": f"无法解析AI返回的数据: {str(e)}"
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"识别失败: {str(e)}"
+        }
+
+
+def insert_recipe_to_db(recipe_data):
+    """
+    Insert extracted recipe data into the database.
+    
+    Args:
+        recipe_data: Dictionary with recipe information
+    
+    Returns:
+        Dictionary with success status and recipe id
+    """
+    import sqlite3
+    
+    db_path = os.path.join(os.path.dirname(__file__), 'breakfast.db')
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        # Insert recipe
+        cursor.execute('''
+            INSERT INTO recipes (recipe_name, recipe_name_en, category, difficulty, 
+                cooking_time, user_rating)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            recipe_data.get('recipe_name', '未命名'),
+            recipe_data.get('recipe_name_en', ''),
+            recipe_data.get('category', '其他'),
+            recipe_data.get('difficulty', 1),
+            recipe_data.get('cooking_time', 10),
+            3.0
+        ))
+        recipe_id = cursor.lastrowid
+        
+        # Insert ingredients
+        for ing in recipe_data.get('ingredients', []):
+            cursor.execute('''
+                INSERT INTO ingredients (recipe_id, ingredient_name, quantity, unit, notes)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (
+                recipe_id,
+                ing.get('name', ''),
+                ing.get('quantity', 0),
+                ing.get('unit', ''),
+                ing.get('notes', '')
+            ))
+        
+        # Insert instructions
+        for inst in recipe_data.get('instructions', []):
+            cursor.execute('''
+                INSERT INTO instructions (recipe_id, step_number, instruction)
+                VALUES (?, ?, ?)
+            ''', (
+                recipe_id,
+                inst.get('step', 1),
+                inst.get('description', '')
+            ))
+        
+        # Insert nutrition
+        nutr = recipe_data.get('nutrition', {})
+        cursor.execute('''
+            INSERT INTO nutrition (recipe_id, calories, protein, carbohydrate, fat, fiber)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            recipe_id,
+            nutr.get('calories', 0),
+            nutr.get('protein', 0),
+            nutr.get('carbohydrate', 0),
+            nutr.get('fat', 0),
+            nutr.get('fiber', 0)
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return {
+            "success": True,
+            "recipe_id": recipe_id,
+            "message": f"✅ 成功添加食谱: {recipe_data.get('recipe_name', '未命名')}"
+        }
+        
+    except Exception as e:
+        return {
+            "success": False,
+            "error": f"数据库插入失败: {str(e)}"
+        }
