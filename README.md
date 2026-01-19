@@ -113,6 +113,58 @@ Food_platform/
 11. 豆浆 (Soy Milk)
 12. 小米粥 (Millet Porridge)
 
+## ☁️ 部署与更新 (Deployment)
+
+本项目已针对 **Render** 进行优化。
+
+### 部署到 Render
+1. 在 [Render](https://render.com) 上创建新的 Web Service
+2. 连接 GitHub 仓库
+3. **Run Command**: `python server.py` (系统会自动处理数据库初始化)
+4. 环境变量自动检测，无需额外配置
+
+### 🔄 如何更新菜单 (How to Add Recipes)
+
+由于 Render Free Plan 的文件系统是临时的（重启后数据库会重置），**推荐直接修改代码**来永久添加菜谱。
+
+#### 方法：修改 `init_db.py`
+
+1. 打开项目的 `init_db.py` 文件。
+2. 找到 `recipes` 列表（通常在文件顶部）。
+3. 按照现有格式添加新的菜谱数据：
+
+```python
+    {
+        'recipe_name': '新菜谱名',
+        'recipe_name_en': 'New Recipe Name',
+        'category': '类别',
+        'difficulty': 1,  # 1-5
+        'cooking_time': 15, # 分钟
+        'source_article': '', 'source_author': '', 'source_link': '',
+        'publish_date': '2024-01-01', 'likes_count': 0,
+        'ingredients': [
+            {'name': '鸡蛋', 'quantity': 2, 'unit': '个'},
+            {'name': '盐', 'quantity': 1, 'unit': 'g'},
+        ],
+        'instructions': [
+            {'step': 1, 'description': '把水烧开...'},
+            {'step': 2, 'description': '放入食材...'},
+        ],
+        'nutrition': {
+            'calories': 150, 'protein': 12, 'carbohydrate': 5, 'fat': 10, 'fiber': 0
+        }
+    },
+```
+
+4. **推送到 GitHub**：
+   Render 会检测到代码变更，自动重新部署并重建包含新菜谱的数据库。
+
+   ```bash
+   git add init_db.py
+   git commit -m "feat: add new recipe"
+   git push
+   ```
+
 ## 📝 License
 
 MIT License
